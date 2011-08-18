@@ -19,4 +19,4 @@ xml = publish_string(rst, writer_name='xml')
 # Parse the xml
 parser = etree.XMLParser(dtd_validation=True, no_network=False)
 tree = etree.parse(StringIO(xml), parser)
-print etree.tostring(tree.getroot())
+print etree.tostring(tree.getroot(), pretty_print=True)
