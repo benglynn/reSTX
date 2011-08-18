@@ -4,4 +4,6 @@ setup(
     name = 'reSTX',
     version = '0.1',
     py_modules = ['reSTX'],
-    install_requires = ['docutils==0.8'])
+    install_requires = [
+        'docutils==0.8',
+        'lxml==2.3'])
