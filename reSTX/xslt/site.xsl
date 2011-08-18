@@ -19,6 +19,10 @@
     </html>
   </xsl:template>
 
-  <xsl:template match="*"/>
+  <xsl:template match="*">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="docinfo"/>
 
 </xsl:stylesheet>

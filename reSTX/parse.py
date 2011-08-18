@@ -29,7 +29,7 @@ xml = re.sub(pattern, '"%s"' % dtduri, xml)
 parser = etree.XMLParser(dtd_validation=True, ns_clean=True, 
     remove_blank_text=True)
 tree = etree.parse(StringIO(xml), parser)
-pretty =  etree.tostring(tree.getroot(), pretty_print=True)
+pretty =  etree.tostring(tree, pretty_print=True)
 # Write the xml to a reference whilst developing
 xmlfile = open('xml.xml', 'w')
 xmlfile.write(pretty)

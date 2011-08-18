@@ -34,4 +34,14 @@
     </p>
   </xsl:template>
 
+  <xsl:template match="literal_block">
+    <pre><xsl:apply-templates /></pre>
+  </xsl:template>
+
+  <xsl:template match="reference[@refuri]">
+    <a href="{@refuri}">
+      <xsl:apply-templates/>
+    </a>
+  </xsl:template>
+
 </xsl:stylesheet>
