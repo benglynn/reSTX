@@ -12,11 +12,20 @@
 	<title><xsl:value-of select="title"/></title>
       </head>
       <body>
-	<h1><xsl:value-of select="title"/></h1>
 	<xsl:apply-templates/>
       </body>
     </html>
   </xsl:template>
+
+  <xsl:template match="section">
+    <section>
+      <xsl:apply-templates select="title"/>
+    </section>
+  </xsl:template>
+
+<xsl:template match="title">
+  <h1><xsl:value-of select="text()"/></h1>
+</xsl:template>
 
   <xsl:template match="*"/>
 
