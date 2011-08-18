@@ -37,7 +37,7 @@ xmlfile.close()
 
 # Transform to html
 xslname = 'site.xsl'
-xsl = etree.parse(os.path.join(DIR, xslname))
+xsl = etree.parse(os.path.join(DIR, 'xslt', xslname))
 transform = etree.XSLT(xsl)
 
 html =  transform(tree)

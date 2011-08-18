@@ -2,21 +2,6 @@
     version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:template match="/">
-    <xsl:apply-templates select="document"/>
-  </xsl:template>
-
-  <xsl:template match="document">
-    <html>
-      <head>
-	<title><xsl:value-of select="title"/></title>
-      </head>
-      <body>
-	<xsl:apply-templates/>
-      </body>
-    </html>
-  </xsl:template>
-
   <xsl:template match="section">
     <section>
       <xsl:apply-templates/>
@@ -48,7 +33,5 @@
       <xsl:apply-templates />
     </p>
   </xsl:template>
-
-  <xsl:template match="*"/>
 
 </xsl:stylesheet>
