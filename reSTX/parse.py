@@ -5,10 +5,7 @@ from StringIO import StringIO
 from docutils.core import publish_string
 from lxml import etree
 
-DTD = 'docutils.dtd'
 DIR = os.path.abspath(os.path.dirname(__file__))
-DTDDIR = os.path.join(DIR, 'dtd')
-DTDURI = 'file://%s/%s' % (DTDDIR, DTD)
 
 try:
     filename = sys.argv[1]
@@ -22,13 +19,30 @@ rst = unicode(file.read()).encode('utf-8')
 xml = publish_string(rst, writer_name='xml')
 
 # Replace DTD reference to local DTD
-pattern = r'"[^"]+%s"' % DTD
-xml = re.sub(pattern, '"%s"' % DTDURI, xml)
+dtdname = 'docutils.dtd'
+dtddir = os.path.join(DIR, 'dtd')
+dtduri = 'file://%s/%s' % (dtddir, dtdname)
+pattern = r'"[^"]+%s"' % dtdname
+xml = re.sub(pattern, '"%s"' % dtduri, xml)
 
 # Parse the xml
-parser = etree.XMLParser(dtd_validation=True)
+parser = etree.XMLParser(dtd_validation=True, ns_clean=True, 
+    remove_blank_text=True)
 tree = etree.parse(StringIO(xml), parser)
 pretty =  etree.tostring(tree.getroot(), pretty_print=True)
+# Write the xml to a reference whilst developing
+xmlfile = open('xml.xml', 'w')
+xmlfile.write(pretty)
+xmlfile.close()
 
-print pretty
+# Transform to html
+xslname = 'site.xsl'
+xsl = etree.parse(os.path.join(DIR, xslname))
+transform = etree.XSLT(xsl)
+
+html =  transform(tree)
+prettyhtml = etree.tostring(html.getroot(), pretty_print=True)
+htmlfile = open('index.html', 'w')
+htmlfile.write(prettyhtml)
+htmlfile.close()
 
