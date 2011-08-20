@@ -18,16 +18,19 @@ file = open(filename, 'r')
 rst = unicode(file.read()).encode('utf-8')
 xml = publish_string(rst, writer_name='xml')
 
-# Replace DTD reference to local DTD
-dtdname = 'docutils.dtd'
-dtddir = os.path.join(DIR, 'dtd')
-dtduri = 'file://%s/%s' % (dtddir, dtdname)
-pattern = r'"[^"]+%s"' % dtdname
-xml = re.sub(pattern, '"%s"' % dtduri, xml)
-
 # Parse the xml
-parser = etree.XMLParser(dtd_validation=True, ns_clean=True, 
-    remove_blank_text=True)
+
+class DTDResolver(etree.Resolver):
+    """ Resolve the DTD with a filesystem copy to speed up parsing. Subsequent 
+    URLs are relative, and so resolve correctly once the first is found."""
+    def resolve(self, url, id, context):
+        if url == 'http://docutils.sourceforge.net/docs/ref/docutils.dtd':
+            dtd = os.path.join(DIR, 'dtd', 'docutils.dtd')
+            return self.resolve_filename(dtd, context)
+        return None
+
+parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
+parser.resolvers.add(DTDResolver())
 tree = etree.parse(StringIO(xml), parser)
 pretty =  etree.tostring(tree, pretty_print=True)
 # Write the xml to a reference whilst developing

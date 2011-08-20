@@ -5,11 +5,11 @@
   <xsl:include href="body.xsl"/>
 
   <xsl:template match="/">
-    <xsl:apply-templates />
+    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="document">
-    <html>
+    <html data-ns="{namespace-uri(.)}">
       <head>
 	<title><xsl:value-of select="title"/></title>
       </head>
