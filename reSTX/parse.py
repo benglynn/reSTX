@@ -6,6 +6,7 @@ from docutils.core import publish_string
 from lxml import etree
 
 DIR = os.path.abspath(os.path.dirname(__file__))
+DOCUTILS_DTD = os.path.join(DIR, 'dtd', 'docutils.dtd')
 
 try:
     filename = sys.argv[1]
@@ -25,8 +26,7 @@ class DTDResolver(etree.Resolver):
     URLs are relative, and so resolve correctly once the first is found."""
     def resolve(self, url, id, context):
         if url == 'http://docutils.sourceforge.net/docs/ref/docutils.dtd':
-            dtd = os.path.join(DIR, 'dtd', 'docutils.dtd')
-            return self.resolve_filename(dtd, context)
+            return self.resolve_filename(DOCUTILS_DTD, context)
         return None
 
 parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
@@ -44,7 +44,7 @@ xsl = etree.parse(os.path.join(DIR, 'xslt', xslname))
 transform = etree.XSLT(xsl)
 
 html =  transform(tree)
-prettyhtml = etree.tostring(html.getroot(), pretty_print=True)
+prettyhtml = etree.tostring(html, pretty_print=True)
 htmlfile = open('index.html', 'w')
 htmlfile.write(prettyhtml)
 htmlfile.close()

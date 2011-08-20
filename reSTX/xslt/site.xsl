@@ -1,6 +1,15 @@
 <xsl:stylesheet 
-    version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <xsl:output
+    method="html"
+    doctype-public="XSLT-compat"
+    omit-xml-declaration="yes"
+    encoding="UTF-8"
+    indent="yes" />
+
+  <xsl:strip-space elements="*"/>
 
   <xsl:include href="body.xsl"/>
 
@@ -9,8 +18,9 @@
   </xsl:template>
 
   <xsl:template match="document">
-    <html data-ns="{namespace-uri(.)}">
+    <html>
       <head>
+	<meta charset="UTF-8"/>
 	<title><xsl:value-of select="title"/></title>
       </head>
       <body>
