@@ -4,7 +4,7 @@
 
   <xsl:output
     method="html"
-    doctype-public="XSLT-compat"
+    doctype-public="about:legacy-compat"
     omit-xml-declaration="yes"
     encoding="UTF-8"
     indent="yes" />
