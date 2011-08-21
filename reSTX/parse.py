@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, re
+import sys, os, re, codecs
 from StringIO import StringIO
 from docutils.core import publish_string
 from lxml import etree
@@ -43,9 +43,8 @@ xslname = 'site.xsl'
 xsl = etree.parse(os.path.join(DIR, 'xslt', xslname))
 transform = etree.XSLT(xsl)
 
-html =  transform(tree)
-prettyhtml = etree.tostring(html, pretty_print=True)
-htmlfile = open('index.html', 'w')
+prettyhtml = etree.tostring(transform(tree), pretty_print=True)
+htmlfile = codecs.open('index.html', 'w', encoding='utf-8')
 htmlfile.write(prettyhtml)
 htmlfile.close()
 
