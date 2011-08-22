@@ -1,6 +1,10 @@
 <xsl:stylesheet 
   version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:rstx="http://benglynn.net/rstx"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="http://www.w3.org/1999/xhtml"
+  exclude-result-prefixes="html rstx">
 
   <xsl:output
     method="html"
@@ -10,6 +14,9 @@
     indent="yes" />
 
   <xsl:strip-space elements="*"/>
+  <xsl:preserve-space elements="script"/>
+
+  <xsl:param name="test">default</xsl:param>
 
   <xsl:include href="body.xsl"/>
 
@@ -18,15 +25,27 @@
   </xsl:template>
 
   <xsl:template match="document">
-    <html>
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb">
       <head>
 	<meta charset="UTF-8"/>
 	<title><xsl:value-of select="title"/></title>
       </head>
       <body>
+	<xsl:apply-templates select="rstx:media()/css" mode="media"/>
 	<xsl:apply-templates/>
+	<xsl:apply-templates select="rstx:media()/script" mode="media"/>
       </body>
     </html>
+  </xsl:template>
+
+  <xsl:template match="css"  mode="media">
+    <xsl:copy-of select="."/>
+  </xsl:template>
+
+  <xsl:template match="script"  mode="media">
+    <script src="{@src}">
+      <xsl:value-of select="' '"/>
+    </script>
   </xsl:template>
 
   <xsl:template match="*">

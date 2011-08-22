@@ -7,6 +7,8 @@ from lxml import etree
 
 DIR = os.path.abspath(os.path.dirname(__file__))
 DOCUTILS_DTD = os.path.join(DIR, 'dtd', 'docutils.dtd')
+FUNCTION_NS = 'http://benglynn.net/rstx'
+HTML_NS = 'http://www.w3.org/1999/xhtml'
 
 try:
     filename = sys.argv[1]
@@ -38,12 +40,21 @@ xmlfile = open('xml.xml', 'w')
 xmlfile.write(pretty)
 xmlfile.close()
 
+# Create a node list of media
+def media(context):
+    media = etree.Element('media')
+    js = etree.SubElement(media, 'script', src='/script/main.js')
+    css = etree.SubElement(media, 'file')
+    return media
+ns = etree.FunctionNamespace(FUNCTION_NS)
+ns['media'] = media
+
 # Transform to html
 xslname = 'site.xsl'
 xsl = etree.parse(os.path.join(DIR, 'xslt', xslname))
 transform = etree.XSLT(xsl)
-
-prettyhtml = etree.tostring(transform(tree), pretty_print=True)
+html = transform(tree, test='"hello"')
+prettyhtml = etree.tostring(html, pretty_print=True)
 htmlfile = codecs.open('index.html', 'w', encoding='utf-8')
 htmlfile.write(prettyhtml)
 htmlfile.close()
