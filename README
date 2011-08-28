@@ -1,0 +1,7 @@
+Hacking around a proof-of-concept, and now refactoring into a reusable module. 
+
+reSTX is an offline tool for publishing flat websites. It recursively parses 
+restructured text files in a directory tree, creating html in each directory. 
+Sites may therefore be written and updated using reST, which is a fast and less 
+distracting way to author content.
+
