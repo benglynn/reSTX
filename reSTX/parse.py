@@ -6,18 +6,31 @@ from docutils.core import publish_string
 from lxml import etree
 
 DIR = os.path.abspath(os.path.dirname(__file__))
-DOCUTILS_DTD = os.path.join(DIR, 'dtd', 'docutils.dtd')
+DOCUTILS_DTD = os.path.join(DIR, 'lib', 'dtd', 'docutils.dtd')
 FUNCTION_NS = 'http://benglynn.net/rstx'
 HTML_NS = 'http://www.w3.org/1999/xhtml'
+EXAMPLE_DIR = os.path.join(DIR, 'example')
 
-try:
-    filename = sys.argv[1]
-except IndexError:
-    print 'Usage: %s <filename>' % sys.argv[0]
-    sys.exit(1)
+class Directory(object):
+    """ A directory in the hierarchy for which to generate an index html file.
+    This may be the root, or any node or leaf underneath. """
+    def __init__(self, dirname, parent=None):
+        self.parent = parent
+        self.dirname = dirname
+        self.children = []
+
+    def publish(self):
+        for item in os.listdir(self.dirname):
+            print item, os.path.isdir(item)
+        
+
+
+
+
+
 
 # Convert the reST file to xml
-file = open(filename, 'r')
+file = open(os.path.join(EXAMPLE_DIR, 'post.rst'), 'r')
 rst = unicode(file.read()).encode('utf-8')
 xml = publish_string(rst, writer_name='xml')
 
@@ -51,11 +64,15 @@ ns['media'] = media
 
 # Transform to html
 xslname = 'site.xsl'
-xsl = etree.parse(os.path.join(DIR, 'xslt', xslname))
+xsl = etree.parse(os.path.join(DIR, 'lib', 'xslt', xslname))
 transform = etree.XSLT(xsl)
 html = transform(tree, test='"hello"')
 prettyhtml = etree.tostring(html, pretty_print=True)
-htmlfile = codecs.open('index.html', 'w', encoding='utf-8')
+
+
+# Write the html index file
+htmlfile = codecs.open(os.path.join(EXAMPLE_DIR, 'index.html'), 'w', 
+    encoding='utf-8')
 htmlfile.write(prettyhtml)
 htmlfile.close()
 
