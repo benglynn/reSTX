@@ -10,6 +10,8 @@ DOCUTILS_DTD = os.path.join(DIR, 'lib', 'dtd', 'docutils.dtd')
 FUNCTION_NS = 'http://benglynn.net/rstx'
 HTML_NS = 'http://www.w3.org/1999/xhtml'
 EXAMPLE_DIR = os.path.join(DIR, 'example')
+POST_NAME = 'post.rst'
+
 
 class Directory(object):
     """ A directory in the hierarchy for which to generate an index html file.
@@ -20,17 +22,26 @@ class Directory(object):
         self.children = []
 
     def publish(self):
-        for item in os.listdir(self.dirname):
-            print item, os.path.isdir(item)
-        
+        self.find_children()
 
 
+    def find_children(self):
+        """ Recursively add Directory instances for all child directories 
+        containing post files. """
+        # For each item in this directory
+        for name in os.listdir(self.dirname):
+            fullpath = os.path.join(self.dirname, name)
+            # If the item's a directory
+            if os.path.isdir(fullpath):
+                # If the directory has a post
+                if os.path.isfile(os.path.join(fullpath, POST_NAME)):
+                    self.children.append(Directory(fullpath, self))
 
 
 
 
 # Convert the reST file to xml
-file = open(os.path.join(EXAMPLE_DIR, 'post.rst'), 'r')
+file = open(os.path.join(EXAMPLE_DIR, POST_NAME), 'r')
 rst = unicode(file.read()).encode('utf-8')
 xml = publish_string(rst, writer_name='xml')
 
