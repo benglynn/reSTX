@@ -17,13 +17,11 @@ class Directory(object):
     """ A directory in the hierarchy for which to generate an index html file.
     This may be the root, or any node or leaf underneath. """
     def __init__(self, dirname, parent=None):
+        print dirname
         self.parent = parent
         self.dirname = dirname
         self.children = []
-
-    def publish(self):
         self.find_children()
-
 
     def find_children(self):
         """ Recursively add Directory instances for all child directories 
