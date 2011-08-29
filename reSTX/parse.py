@@ -33,6 +33,7 @@ class Directory(object):
 
     def __init__(self, dirpath, parent=None):
         self.parent = parent
+        self.root = self.parent or self
         self.dirpath = dirpath
         self.dirname = os.path.split(self.dirpath)[-1]
         self.children = []
@@ -65,15 +66,25 @@ class Directory(object):
     def publish(self):
         """ Recursively publish the html for each directory. """
 
-        # todo: add in root structure for navigation
-        html = Directory.transform(self.xml, exampleparam='test')
+        # Construct the xml for this directory
+        rstx = etree.Element('rstx', path=self.path)
+        rstx.append(self.root.element)
+        rstx.append(self.xml.getroot())
+        
+        # Write html
+        html = Directory.transform(rstx, exampleparam='test')
         prettyhtml = etree.tostring(html, pretty_print=True)
-
-        # Write the html index file
         htmlfile = codecs.open(os.path.join(self.dirpath, 'index.html'), 'w', 
             encoding='utf-8')
         htmlfile.write(prettyhtml)
         htmlfile.close()
+
+        # Write XML whilst designing
+        prettyxml = etree.tostring(rstx, pretty_print=True)
+        xmlfile = codecs.open(os.path.join(self.dirpath, 'index.xml'), 'w', 
+            encoding='utf-8')
+        xmlfile.write(prettyxml)
+        xmlfile.close()
 
         # Recurse
         for child in self.children:
