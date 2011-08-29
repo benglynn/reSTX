@@ -14,9 +14,9 @@
     indent="yes" />
 
   <xsl:strip-space elements="*"/>
-  <xsl:preserve-space elements="script"/>
 
-  <xsl:param name="test">default</xsl:param>
+  <xsl:variable name="path" select="rstx/@path"/>
+  <xsl:variable name="site" select="rstx/directory"/>
 
   <xsl:include href="body.xsl"/>
 
@@ -31,11 +31,19 @@
 	<title><xsl:value-of select="title"/></title>
       </head>
       <body>
+	<xsl:apply-templates select="$site" mode="nav"/>
 	<xsl:apply-templates select="rstx:media()/css" mode="media"/>
 	<xsl:apply-templates/>
 	<xsl:apply-templates select="rstx:media()/script" mode="media"/>
       </body>
     </html>
+  </xsl:template>
+
+  <xsl:template match="directory" mode="nav">
+    <a href="{@path}">
+      <xsl:value-of select="@title"/>
+    </a>
+    <xsl:apply-templates mode="nav"/>
   </xsl:template>
 
   <xsl:template match="css"  mode="media">
