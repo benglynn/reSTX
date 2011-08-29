@@ -14,8 +14,21 @@ POST_NAME = 'post.rst'
 
 
 class Directory(object):
-    """ A directory in the hierarchy for which to generate an index html file.
-    This may be the root, or any node or leaf underneath. """
+    """ A directory in the hierarchy for which to generate an index html file. """
+
+
+    class DTDResolver(etree.Resolver):
+        """ Resolve the DTD with a filesystem copy to speed up parsing. Subsequent 
+        URLs are relative, and so resolve correctly once the first is found."""
+        def resolve(self, url, id, context):
+            if url == 'http://docutils.sourceforge.net/docs/ref/docutils.dtd':
+                return self.resolve_filename(DOCUTILS_DTD, context)
+            return None
+
+
+    parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
+    parser.resolvers.add(DTDResolver())
+
     def __init__(self, dirpath, parent=None):
         self.parent = parent
         self.dirpath = dirpath
@@ -24,14 +37,23 @@ class Directory(object):
         self.path = self.parent and '%s%s/' % (self.parent.path, self.dirname) \
             or '/'
 
-        # Get reST
+        # Get reST as XML
         rstfilepath = os.path.join(self.dirpath, POST_NAME)
         rstfile = codecs.open(rstfilepath, encoding='utf-8')
         self.rst = unicode(rstfile.read())
         rstfile.close()
+        xmlstring = publish_string(self.rst, writer_name='xml')
+        self.xml = etree.parse(StringIO(xmlstring), Directory.parser)
+
+        # Get metadata for this post
+        # document/docinfo
+        self.title = self.xml.xpath('title/text()')[0]
 
         # Add to the XML site structure
-        self.element = etree.Element('directory', path=self.path)
+        attributes = {
+            'path': self.path,
+            'title': self.title,}
+        self.element = etree.Element('directory', **attributes)
         if self.parent:
             parent.element.append(self.element)
 
@@ -58,6 +80,9 @@ class Directory(object):
 
 
 
+
+
+
 # Convert the reST file to xml
 file = codecs.open(os.path.join(EXAMPLE_DIR, POST_NAME), encoding='utf-8')
 rst = unicode(file.read())
@@ -65,17 +90,7 @@ xml = publish_string(rst, writer_name='xml')
 
 # Parse the xml
 
-class DTDResolver(etree.Resolver):
-    """ Resolve the DTD with a filesystem copy to speed up parsing. Subsequent 
-    URLs are relative, and so resolve correctly once the first is found."""
-    def resolve(self, url, id, context):
-        if url == 'http://docutils.sourceforge.net/docs/ref/docutils.dtd':
-            return self.resolve_filename(DOCUTILS_DTD, context)
-        return None
-
-parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
-parser.resolvers.add(DTDResolver())
-tree = etree.parse(StringIO(xml), parser)
+tree = etree.parse(StringIO(xml), Directory.parser)
 pretty =  etree.tostring(tree, pretty_print=True)
 # Write the xml to a reference whilst developing
 xmlfile = open('xml.xml', 'w')
