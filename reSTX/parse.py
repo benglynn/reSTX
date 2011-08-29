@@ -7,10 +7,10 @@ from lxml import etree
 
 DIR = os.path.abspath(os.path.dirname(__file__))
 DOCUTILS_DTD = os.path.join(DIR, 'lib', 'dtd', 'docutils.dtd')
-FUNCTION_NS = 'http://benglynn.net/rstx'
+F_NAMESPACE = etree.FunctionNamespace('http://benglynn.net/rstx')
 HTML_NS = 'http://www.w3.org/1999/xhtml'
-EXAMPLE_DIR = os.path.join(DIR, 'example')
 POST_NAME = 'post.rst'
+XSLT_PATH = os.path.join(DIR, 'lib', 'xslt', 'site.xsl')
 
 
 class Directory(object):
@@ -28,6 +28,8 @@ class Directory(object):
 
     parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
     parser.resolvers.add(DTDResolver())
+    transform = etree.XSLT(etree.parse(XSLT_PATH))
+
 
     def __init__(self, dirpath, parent=None):
         self.parent = parent
@@ -46,8 +48,8 @@ class Directory(object):
         self.xml = etree.parse(StringIO(xmlstring), Directory.parser)
 
         # Get metadata for this post
-        # document/docinfo
         self.title = self.xml.xpath('title/text()')[0]
+        # todo: tags, date and other metadat that might be used in navigation
 
         # Add to the XML site structure
         attributes = {
@@ -60,9 +62,22 @@ class Directory(object):
         # Recurse
         self.find_children()
 
-        # Dev only
-        if self.parent == None:
-            print etree.tostring(self.element, pretty_print=True)
+    def publish(self):
+        """ Recursively publish the html for each directory. """
+
+        # todo: add in root structure for navigation
+        html = Directory.transform(self.xml, exampleparam='test')
+        prettyhtml = etree.tostring(html, pretty_print=True)
+
+        # Write the html index file
+        htmlfile = codecs.open(os.path.join(self.dirpath, 'index.html'), 'w', 
+            encoding='utf-8')
+        htmlfile.write(prettyhtml)
+        htmlfile.close()
+
+        # Recurse
+        for child in self.children:
+            child.publish()
 
 
     def find_children(self):
@@ -78,45 +93,12 @@ class Directory(object):
                     self.children.append(Directory(fullpath, self))
 
 
-
-
-
-
-
-# Convert the reST file to xml
-file = codecs.open(os.path.join(EXAMPLE_DIR, POST_NAME), encoding='utf-8')
-rst = unicode(file.read())
-xml = publish_string(rst, writer_name='xml')
-
-# Parse the xml
-
-tree = etree.parse(StringIO(xml), Directory.parser)
-pretty =  etree.tostring(tree, pretty_print=True)
-# Write the xml to a reference whilst developing
-xmlfile = open('xml.xml', 'w')
-xmlfile.write(pretty)
-xmlfile.close()
-
 # Create a node list of media
+# todo: get this into Directory instances?
 def media(context):
     media = etree.Element('media')
     js = etree.SubElement(media, 'script', src='/script/main.js')
     css = etree.SubElement(media, 'file')
     return media
-ns = etree.FunctionNamespace(FUNCTION_NS)
-ns['media'] = media
-
-# Transform to html
-xslname = 'site.xsl'
-xsl = etree.parse(os.path.join(DIR, 'lib', 'xslt', xslname))
-transform = etree.XSLT(xsl)
-html = transform(tree, test='"hello"')
-prettyhtml = etree.tostring(html, pretty_print=True)
-
-
-# Write the html index file
-htmlfile = codecs.open(os.path.join(EXAMPLE_DIR, 'index.html'), 'w', 
-    encoding='utf-8')
-htmlfile.write(prettyhtml)
-htmlfile.close()
+F_NAMESPACE['media'] = media
 
