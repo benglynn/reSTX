@@ -22,12 +22,21 @@ class Directory(object):
         self.dirname = os.path.split(self.dirpath)[-1]
         self.children = []
 
+        # Get reST
+        rstfile = codecs.open(os.path.join(self.dirpath, POST_NAME), encoding='utf-8')
+        self.rst = unicode(rstfile.read())
+        print type(self.rst)
+        rstfile.close()
+
         # Add to the XML site structure
         self.element = etree.Element('directory', dirnname=self.dirname)
         if self.parent:
             parent.element.append(self.element)
+
+        # Recurse
         self.find_children()
 
+        # Dev only
         if self.parent == None:
             print etree.tostring(self.element, pretty_print=True)
 
@@ -48,8 +57,8 @@ class Directory(object):
 
 
 # Convert the reST file to xml
-file = open(os.path.join(EXAMPLE_DIR, POST_NAME), 'r')
-rst = unicode(file.read()).encode('utf-8')
+file = codecs.open(os.path.join(EXAMPLE_DIR, POST_NAME), encoding='utf-8')
+rst = unicode(file.read())
 xml = publish_string(rst, writer_name='xml')
 
 # Parse the xml
