@@ -16,19 +16,28 @@ POST_NAME = 'post.rst'
 class Directory(object):
     """ A directory in the hierarchy for which to generate an index html file.
     This may be the root, or any node or leaf underneath. """
-    def __init__(self, dirname, parent=None):
-        print dirname
+    def __init__(self, dirpath, parent=None):
         self.parent = parent
-        self.dirname = dirname
+        self.dirpath = dirpath
+        self.dirname = os.path.split(self.dirpath)[-1]
         self.children = []
+
+        # Add to the XML site structure
+        self.element = etree.Element('directory', dirnname=self.dirname)
+        if self.parent:
+            parent.element.append(self.element)
         self.find_children()
+
+        if self.parent == None:
+            print etree.tostring(self.element, pretty_print=True)
+
 
     def find_children(self):
         """ Recursively add Directory instances for all child directories 
         containing post files. """
         # For each item in this directory
-        for name in os.listdir(self.dirname):
-            fullpath = os.path.join(self.dirname, name)
+        for name in os.listdir(self.dirpath):
+            fullpath = os.path.join(self.dirpath, name)
             # If the item's a directory
             if os.path.isdir(fullpath):
                 # If the directory has a post
