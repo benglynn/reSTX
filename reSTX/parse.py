@@ -21,15 +21,17 @@ class Directory(object):
         self.dirpath = dirpath
         self.dirname = os.path.split(self.dirpath)[-1]
         self.children = []
+        self.path = self.parent and '%s%s/' % (self.parent.path, self.dirname) \
+            or '/'
 
         # Get reST
-        rstfile = codecs.open(os.path.join(self.dirpath, POST_NAME), encoding='utf-8')
+        rstfilepath = os.path.join(self.dirpath, POST_NAME)
+        rstfile = codecs.open(rstfilepath, encoding='utf-8')
         self.rst = unicode(rstfile.read())
-        print type(self.rst)
         rstfile.close()
 
         # Add to the XML site structure
-        self.element = etree.Element('directory', dirnname=self.dirname)
+        self.element = etree.Element('directory', path=self.path)
         if self.parent:
             parent.element.append(self.element)
 
