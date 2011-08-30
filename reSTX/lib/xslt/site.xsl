@@ -43,7 +43,7 @@
     <a href="{@path}">
       <xsl:value-of select="@title"/>
     </a>
-    <xsl:apply-templates mode="nav"/>
+    <xsl:apply-templates select="directory[count(ancestor::directory)=1]" mode="nav"/>
   </xsl:template>
 
   <xsl:template match="css"  mode="media">
