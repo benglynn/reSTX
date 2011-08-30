@@ -16,7 +16,7 @@
   <xsl:strip-space elements="*"/>
 
   <xsl:variable name="path" select="rstx/@path"/>
-  <xsl:variable name="site" select="rstx/directory"/>
+  <xsl:variable name="site" select="rstx/directory[directory]"/>
 
   <xsl:include href="body.xsl"/>
 
