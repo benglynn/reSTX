@@ -51,9 +51,7 @@
   </xsl:template>
 
   <xsl:template match="script"  mode="media">
-    <script src="{@src}">
-      <xsl:value-of select="' '"/>
-    </script>
+    <script src="{@src}"/>
   </xsl:template>
 
   <xsl:template match="*">

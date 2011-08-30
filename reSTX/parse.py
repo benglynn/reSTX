@@ -78,6 +78,8 @@ class Directory(object):
         # Write html
         html = Directory.transform(rstx, exampleparam='test')
         prettyhtml = etree.tostring(html, pretty_print=True)
+        # Help lxml with html5, necessary event though it has output html
+        prettyhtml = re.sub(r'(<script[^>]*)/>', r'\1></script>', prettyhtml)
         htmlfile = codecs.open(os.path.join(self.dirpath, 'index.html'), 'w', 
             encoding='utf-8')
         htmlfile.write(prettyhtml)
