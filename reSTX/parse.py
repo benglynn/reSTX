@@ -115,7 +115,8 @@ class Directory(object):
 def media(context):
     media = etree.Element('media')
     js = etree.SubElement(media, 'script', src='/script/main.js')
-    css = etree.SubElement(media, 'file')
+    css = etree.SubElement(media, 'link', href='/style/scren.css', 
+        type='text/css', rel='stylesheet')
     return media
 F_NAMESPACE['media'] = media
 

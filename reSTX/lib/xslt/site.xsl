@@ -29,6 +29,7 @@
       <head>
 	<meta charset="UTF-8"/>
 	<title><xsl:value-of select="title"/></title>
+	<xsl:apply-templates select="rstx:media()/link" mode="media"/>
       </head>
       <body>
 	<xsl:apply-templates select="$site" mode="nav"/>
@@ -52,6 +53,13 @@
 
   <xsl:template match="script"  mode="media">
     <script src="{@src}"/>
+  </xsl:template>
+
+
+  <xsl:template match="link"  mode="media">
+    <link>
+      <xsl:copy-of select="@*"/>
+    </link>
   </xsl:template>
 
   <xsl:template match="*">
