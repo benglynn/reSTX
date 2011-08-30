@@ -33,12 +33,16 @@ class Directory(object):
 
     def __init__(self, dirpath, parent=None):
         self.parent = parent
-        self.root = self.parent or self
         self.dirpath = dirpath
         self.dirname = os.path.split(self.dirpath)[-1]
         self.children = []
         self.path = self.parent and '%s%s/' % (self.parent.path, self.dirname) \
             or '/'
+
+        self.root = self
+        while self.root.parent:
+            self.root = self.root.parent
+
 
         # Get reST as XML
         rstfilepath = os.path.join(self.dirpath, POST_NAME)
