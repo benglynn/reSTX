@@ -1,0 +1,61 @@
+<rstx path="/">
+  <directory path="/" title="An example post">
+    <directory path="/section-a/" title="Section A"/>
+    <directory path="/section-b/" title="Section B">
+      <directory path="/section-b/child-page/" title="Child page"/>
+    </directory>
+  </directory>
+  <document ids="an-example-post" names="an\ example\ post" source="&lt;string&gt;" title="An example post">
+    <title>An example post</title>
+    <docinfo>
+      <author>benglynn</author>
+      <date>2010-08-17</date>
+      <field>
+        <field_name>Tags</field_name>
+        <field_body>
+          <paragraph>javascript, html, css</paragraph>
+        </field_body>
+      </field>
+    </docinfo>
+    <section ids="this-is-an-example-of-a-single-post-writen-in-rest" names="this\ is\ an\ example\ of\ a\ single\ post\ writen\ in\ rest">
+      <title>This is an example of a single post writen in ReST</title>
+      <paragraph>Next steps, are to look at the parsing of a file like this, or a directory of
+files. Not with the command-line tools in the <literal>docutils</literal> package, but with our
+own parser. It would then construct a flat site, with everything bound together
+with our own navigation. Surely using django templates? But maybe not, maybe
+using <literal>xslt</literal>.</paragraph>
+      <paragraph>Puisqu'ils ont os&#233;, j'oserai aussi, moi.  La v&#233;rit&#233;, je la dirai, car j'ai
+promis de la dire, si la justice, r&#233;guli&#232;rement saisie, ne la faisait pas,
+pleine et enti&#232;re.  Mon devoir est de parler, je ne veux pas &#234;tre complice.  Mes
+nuits seraient hant&#233;es par le spectre de l'innocent qui expie l&#224;-bas, dans la
+plus affreuse des tortures, un crime qu'il n'a pas commis.</paragraph>
+      <paragraph>Here's a paragraph. In the document I make sure to keep it's line length below
+80 characters, as that'll be our standard.</paragraph>
+      <paragraph>A list of stuff:</paragraph>
+      <bullet_list bullet="-">
+        <list_item>
+          <paragraph>A simple way to show off the RsT formatting</paragraph>
+        </list_item>
+        <list_item>
+          <paragraph>Bulleted lists</paragraph>
+        </list_item>
+        <list_item>
+          <paragraph>A list of stuff</paragraph>
+        </list_item>
+      </bullet_list>
+      <paragraph>Here's an example of some <literal>html</literal> code:</paragraph>
+      <literal_block xml:space="preserve">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;The title&lt;/title&gt;
+  &lt;/head&gt;
+&lt;/html&gt;</literal_block>
+      <paragraph>And maybe some <literal>javascript</literal> code too, indented with just two spaces:</paragraph>
+      <literal_block xml:space="preserve">function doSomething (x, y) {
+  return x*y;
+}</literal_block>
+      <paragraph>Okay, that'e enough now! Oh no, hang on, how about a <reference name="link to something" refuri="http://www.bbc.co.uk/">link to something</reference>.
+There! Now we're done!</paragraph>
+      <target ids="link-to-something" names="link\ to\ something" refuri="http://www.bbc.co.uk/"/>
+    </section>
+  </document>
+</rstx>

@@ -1,0 +1,11 @@
+<rstx path="/section-a/">
+  <directory path="/" title="An example post">
+    <directory path="/section-a/" title="Section A"/>
+    <directory path="/section-b/" title="Section B">
+      <directory path="/section-b/child-page/" title="Child page"/>
+    </directory>
+  </directory>
+  <document ids="section-a" names="section\ a" source="&lt;string&gt;" title="Section A">
+    <title>Section A</title>
+  </document>
+</rstx>
