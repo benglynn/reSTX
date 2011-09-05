@@ -42,6 +42,15 @@ class Directory(object):
         return media
 
 
+    @classmethod
+    def heading_name(cls, context, nodeset):
+        """ Return a heading at an appropriate level. """
+        node = context.context_node
+        ancestors =  node.xpath('count(ancestor::section)')
+        level = min(ancestors+1, 5)
+        return 'h%d' % level
+
+
     def __init__(self, dirpath, parent=None):
         self.parent = parent
         self.dirpath = dirpath
@@ -122,3 +131,4 @@ class Directory(object):
 
 
 F_NAMESPACE['media'] = Directory.media
+F_NAMESPACE['heading_name'] = Directory.heading_name
