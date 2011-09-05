@@ -50,4 +50,23 @@
     </a>
   </xsl:template>
 
+  <xsl:template match="definition_list">
+    <dl>
+      <xsl:apply-templates/>
+    </dl>
+  </xsl:template>
+
+
+<xsl:template match="definition_list_item/term">
+  <dt>
+    <xsl:apply-templates/>
+  </dt>
+</xsl:template>
+
+<xsl:template match="definition_list_item/definition">
+  <dd>
+    <xsl:apply-templates/>
+  </dd>
+</xsl:template>
+
 </xsl:stylesheet>
