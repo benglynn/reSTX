@@ -29,7 +29,7 @@
   </xsl:template>
 
   <xsl:template match="title">
-    <xsl:element name="{rstx:heading_name(.)}">
+    <xsl:element name="{rstx:heading-name(.)}">
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>

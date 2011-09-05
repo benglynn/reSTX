@@ -131,4 +131,4 @@ class Directory(object):
 
 
 F_NAMESPACE['media'] = Directory.media
-F_NAMESPACE['heading_name'] = Directory.heading_name
+F_NAMESPACE['heading-name'] = Directory.heading_name
