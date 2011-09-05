@@ -29,6 +29,17 @@ class Directory(object):
     parser = etree.XMLParser(dtd_validation=True, remove_blank_text=True)
     parser.resolvers.add(DTDResolver())
     transform = etree.XSLT(etree.parse(XSLT_PATH))
+    
+    @classmethod
+    def media(cls, context):
+        """ XPath function to return a nodelist of external media.
+        todo: glean recursively from the directory. 
+        todo: no need for a function here, add as xml"""
+        media = etree.Element('media')
+        js = etree.SubElement(media, 'script', src='/script/main.js')
+        css = etree.SubElement(media, 'link', href='/style/scren.css', 
+            type='text/css', rel='stylesheet')
+        return media
 
 
     def __init__(self, dirpath, parent=None):
@@ -110,13 +121,4 @@ class Directory(object):
                     self.children.append(Directory(fullpath, self))
 
 
-# Create a node list of media
-# todo: get this into Directory instances?
-def media(context):
-    media = etree.Element('media')
-    js = etree.SubElement(media, 'script', src='/script/main.js')
-    css = etree.SubElement(media, 'link', href='/style/scren.css', 
-        type='text/css', rel='stylesheet')
-    return media
-F_NAMESPACE['media'] = media
-
+F_NAMESPACE['media'] = Directory.media
