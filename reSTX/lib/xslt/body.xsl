@@ -69,4 +69,10 @@
   </dd>
 </xsl:template>
 
+<xsl:template match="inline">
+  <span class="{@classes}">
+    <xsl:apply-templates/>
+  </span>
+</xsl:template>
+
 </xsl:stylesheet>
