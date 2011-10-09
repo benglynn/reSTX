@@ -41,10 +41,32 @@ class Directory(object):
             type='text/css', rel='stylesheet')
         return media
 
+    @classmethod
+    def id_or_class(cls, context, value=False):
+        """ Return either 'id' or 'class' depending on wheter this element is
+        unique, for use as an attribute name. If ``value`` is True, return the 
+        actual value for that attribute. """
+        node = context.context_node
+        att_names = node.attrib.keys()
+        # Only currently implemented for section
+        if node.tag != 'section':
+            raise NotImplementedError(
+                'id_or_class context must be a section node.')
+        name = 'dupnames' in att_names and 'dupnames' or 'ids' in att_names and \
+            'ids' or None
+        if not name:
+            raise ValueError(
+                'id_or_class expects to find either ``dupnames`` or ``ids`` in '
+                'the %s''s attributes' % node.tag)
+        
+        if value:
+            return node.attrib[name]
+        return name == 'dupnames' and 'class' or 'id'
+
 
     @classmethod
-    def heading_name(cls, context, nodeset):
-        """ Return a heading at an appropriate level. """
+    def heading_name(cls, context):
+        """ Return a an html heading element name at an appropriate level. """
         node = context.context_node
         ancestors =  node.xpath('count(ancestor::section)')
         level = min(ancestors+1, 5)
@@ -132,3 +154,4 @@ class Directory(object):
 
 F_NAMESPACE['media'] = Directory.media
 F_NAMESPACE['heading-name'] = Directory.heading_name
+F_NAMESPACE['id-or-class'] = Directory.id_or_class

@@ -8,9 +8,13 @@
 
   <xsl:template match="section">
     <section>
+    <xsl:attribute name="{rstx:id-or-class()}">
+      <xsl:value-of select="rstx:id-or-class(true())"/>
+    </xsl:attribute>
       <xsl:apply-templates/>
     </section>
   </xsl:template>
+
 
   <xsl:template match="literal">
     <code><xsl:apply-templates/></code>
@@ -29,7 +33,7 @@
   </xsl:template>
 
   <xsl:template match="title">
-    <xsl:element name="{rstx:heading-name(.)}">
+    <xsl:element name="{rstx:heading-name()}">
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
